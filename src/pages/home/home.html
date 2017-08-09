@@ -20,7 +20,11 @@
   </ion-list>
 
   <div padding>
-    <button ion-button class="connectButton" color="primary" block text-capitalize (click)="sendData()">Send {{temp}}° </button>
+    <button ion-button class="connectButton" color="primary" block text-capitalize (click)="sendData()">Start {{temp}}° </button>
+  </div>
+
+  <div padding>
+    <button ion-button color="secondary" block text-capitalize (click)="getStatus()">Get Status</button>
   </div>
 
 </ion-content>

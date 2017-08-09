@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, LoadingController, ToastController
 import { Zeroconf } from '@ionic-native/zeroconf';
 import { DataService } from '../../services/data-service/dataService';
 import { HomePage } from '../home/home';
+import "rxjs/add/operator/timeout";
 
 @IonicPage()
 @Component({
@@ -10,7 +11,7 @@ import { HomePage } from '../home/home';
   templateUrl: 'login.html',
 })
 export class LoginPage {
-
+  /* tslint:disable:no-unused-variable */
   private loader;
   private readonly SERVICE_TYPE: string = '_http._tcp.';
   private readonly SERVICE_DOMAIN: string = 'local.';
@@ -25,10 +26,6 @@ export class LoginPage {
     private toastCtrl: ToastController) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
-  }
-
   startConnect(event) {
 
     this.loader = this.loadingCtrl.create({
@@ -36,27 +33,33 @@ export class LoginPage {
     });
     this.loader.present();
 
-    // watch for services of a specified type
-    this.zeroconf.watch(this.SERVICE_TYPE, this.SERVICE_DOMAIN).subscribe(result => {
-      if (result.service.name.indexOf(this.SERVICE_NAME_PREFIX) !== -1 && result.service.ipv4Addresses[0]) {
-        let alreadyInList = false;
-        this.dataService.deviceServiceInfoList.forEach(e => {
-          if (e.name === result.service.name) {
-            alreadyInList = true;
-          }
-        });
-        if (!alreadyInList) {
-          this.dataService.deviceServiceInfoList.push(result.service);
-        }
 
+    const zeroconfObsevable = this.zeroconf.watch(this.SERVICE_TYPE, this.SERVICE_DOMAIN)
+      //.timeout(5000)
+      .subscribe(result => {
+        if (result.action == 'added') {
+          let alreadyInList = false;
+          for (let s of this.dataService.deviceServiceInfoList) {
+            if (s.name === result.service.name) {
+              alreadyInList = true;
+              break;
+            }
+          }
+          if (!alreadyInList) {
+            this.dataService.deviceServiceInfoList.push(
+              {
+                name: result.service.name,
+                ipAddress: result.service.ipv4Addresses[0]
+              });
+          }
+        }
         this.loader.dismiss();
-      }
-    }, e => {
-      this.loader.dismiss();
-      this.zeroconf.unwatch(this.SERVICE_TYPE, this.SERVICE_DOMAIN);
-      this.dataService.deviceServiceInfoList = [];
-      this.presentToast();
-    });
+      }, e => {
+        this.loader.dismiss();
+        zeroconfObsevable.unsubscribe();
+        this.dataService.deviceServiceInfoList = [];
+        this.presentToast();
+      });
   }
 
   itemSelected(deviceitem) {
@@ -65,10 +68,12 @@ export class LoginPage {
   }
 
   presentToast() {
-    let toast = this.toastCtrl.create({
+    const toast = this.toastCtrl.create({
       message: 'Could not find any device.',
       duration: 5000,
-      position: 'middle'
+      position: 'middle',
+      showCloseButton: true,
+      closeButtonText: 'Undo'
     });
     toast.present();
   }

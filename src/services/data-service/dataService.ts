@@ -1,24 +1,33 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { ZeroconfService } from '@ionic-native/zeroconf';
-// Import RxJs required methods
-import 'rxjs/add/operator/map';
 
 @Injectable()
 export class DataService {
 
-  showList: boolean = false;
-  selectedDevice: ZeroconfService;
-  deviceServiceInfoList: ZeroconfService[] = [];
-  private readonly SERVICE_ENPOINT_URL: string = '/some';
+  public showList: boolean = false;
+  public selectedDevice;
+  public deviceServiceInfoList = [];
+  private readonly ORDER_API_ENDPOINT: string = '/api/order';
+  private readonly STATUS_API_ENDPOINT: string = '/api/status';
 
   constructor(private http: Http) {
   }
 
-  public sendData(data) {
-    let endpointUrl = `http://${this.selectedDevice.ipv4Addresses[0]}:${this.selectedDevice.port}${this.SERVICE_ENPOINT_URL}`;
-    alert('Calling: ' + endpointUrl + ' width: ' + JSON.stringify(data));
-    return this.http.post(endpointUrl, data);
+  public start(clientInformation) {
+    const endpointUrl = `${this.getBaseUrl()}${this.ORDER_API_ENDPOINT}`
+    alert('Calling: ' + endpointUrl + ' width: ' + JSON.stringify(clientInformation));
+    return this.http.post(endpointUrl, clientInformation);
   }
 
+
+  public status() {
+    return this.http.get(`${this.getBaseUrl()}${this.STATUS_API_ENDPOINT}`);
+     
+  }
+
+
+  private getBaseUrl() {
+    return `http://${this.selectedDevice.ipAddress}`;
+  }
 }

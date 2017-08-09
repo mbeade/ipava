@@ -12,6 +12,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Zeroconf } from '@ionic-native/zeroconf';
 import { Device } from '@ionic-native/device';
+import { SettingsPageModule } from '../pages/settings/settings.module';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { Device } from '@ionic-native/device';
     IonicModule.forRoot(MyApp),
     ConnectionPageModule,
     HttpModule,
-    LoginPageModule
+    LoginPageModule,
+    SettingsPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
