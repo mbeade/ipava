@@ -1,14 +1,90 @@
-<ion-header>
-  <ion-navbar color="danger">
-    <ion-title>info</ion-title>
-  </ion-navbar>
-</ion-header>
+<ion-content>
+  <ion-slides>
 
-<ion-content padding>
-  {{dataService.deviceServiceInfoList | json}}
+    <!-- Slide 1 -->
+    <ion-slide class="c-slide">
+      <div padding>
+        Elije el dispositivo
+      </div>
+      <!-- <div padding class="c-center-content">
+        <button class="c-action-btn" color="danger" ion-button block text-capitalize (click)="registerTestingService()">Crear device</button>
+      </div> -->
+
+      <div padding class="c-center-content">
+        <button class="c-action-btn" color="danger" ion-button block text-capitalize (click)="searchDevices()">Buscar</button>
+      </div>
+
+      <ion-list radio-group>
+        <div padding>
+          Dispositivos en linea
+        </div>
+
+        <div padding class="c-center-content" *ngIf="!dataService.deviceServiceInfoList.length">
+          <ion-badge color="danger">Ninguno aún</ion-badge>
+        </div>
+
+        <ion-item *ngFor="let item of dataService.deviceServiceInfoList" class="c-no-background" >
+          <ion-label color="dark" class="c-label">{{item.name}}</ion-label>
+          <ion-radio [value]="item.name" (click)="selectDevice(item)"></ion-radio>
+        </ion-item>
+
+      </ion-list>
+    </ion-slide>
+
+    <!-- Slide 2 -->
+    <ion-slide class="c-slide">
+      <div padding>
+        Establece la temperatura
+      </div>
+
+      <ion-list>
+        <div padding>
+          Temperatura
+        </div>
+        <ion-badge color="danger">{{temp}}°</ion-badge>
+        <ion-item class="c-no-background">
+          <ion-range min="30" max="100" step="1" snaps="true" [(ngModel)]="temp" color="danger">
+            <ion-icon range-left small color="danger" name="thermometer"></ion-icon>
+            <ion-icon range-right color="danger" name="thermometer"></ion-icon>
+          </ion-range>
+        </ion-item>
+      </ion-list>
+
+    </ion-slide>
+
+    <!-- Slide 3 -->
+    <ion-slide class="c-slide">
+
+      <div padding>
+        Comienza tu solicitud
+      </div>
+
+      <div padding class="c-center-content">
+        <button ion-button class="c-action-btn" color="danger" block text-capitalize  (click)="start()">Enviar {{temp}}° </button>
+      </div>
+
+    </ion-slide>
+
+
+    <!-- Slide 4 -->
+    <ion-slide class="c-slide">
+
+      <div padding>
+        Listo! Espera por tu pedido.
+      </div>
+
+      <div padding>
+        Aca algo va a suceder...
+      </div>
+
+    </ion-slide>
+
+  </ion-slides>
+
+  <ion-footer class="c-footer">
+    <div padding class="c-center-content">
+      <ion-badge color="dark">Paso {{slides.getActiveIndex()+1}}</ion-badge>
+    </div>
+  </ion-footer>
+
 </ion-content>
-
-<ion-footer>
-  <ion-toolbar color="dark">
-  </ion-toolbar>
-</ion-footer>
