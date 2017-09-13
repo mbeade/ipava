@@ -1,3 +1,30 @@
-page-connection {
+* {
+    color: white;
+}
 
+.c-slide{
+    background-color: #222;
+    height: 100%;
+}
+
+.c-footer{
+    border: none!important;
+}
+
+.c-center-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.c-no-background {
+    background: transparent;
+}
+
+.c-action-btn{
+    height: 70px;
+    width: 200px;
+    border-radius: 8px;
+}
+.c-label{
+    color: white;
 }
